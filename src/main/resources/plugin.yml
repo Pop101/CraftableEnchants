@@ -1,0 +1,6 @@
+name: CraftableEnchants
+main: com.SketchyPlugins.CraftableEnchants.Main
+version: 0.0.1
+api-version: 1.13
+author: Mr.Random
+description: Makes certain enchantments craftable, giving new use to cetain items.
