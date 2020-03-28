@@ -29,6 +29,8 @@ public class Infusion extends CustomEnchantment{
 			canEnchant.add(m);
 		for(Material m : ItemCategories.ARMOR)
 			canEnchant.add(m);
+		for(Material m : ItemCategories.GLEAMING)
+			canEnchant.remove(m);
 	}
 
 	@Override
@@ -44,9 +46,8 @@ public class Infusion extends CustomEnchantment{
 	}
 
 	@Override
-	public void onTakeDamage(Entity target,ItemStack specificItem, double amount) {
-		// TODO Auto-generated method stub
-		
+	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
+		return amount;
 	}
 
 	@Override

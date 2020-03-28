@@ -19,6 +19,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.SketchyPlugins.CraftableEnchants.Libraries.CustomEnchantment;
+import com.SketchyPlugins.CraftableEnchants.Libraries.ItemCategories;
 
 public class EnchantmentCrafting implements Listener{
 	JavaPlugin plugin;
@@ -39,6 +40,10 @@ public class EnchantmentCrafting implements Listener{
 			return;
 		if(second.getType() == Material.ENCHANTED_BOOK)
 			return;
+		//no gleaming
+		if(ItemCategories.contains(first.getType(), ItemCategories.GLEAMING) || ItemCategories.contains(second.getType(), ItemCategories.GLEAMING))
+			return;
+		
 		ItemStack result = isAnvilRecipe(first,second);
 		//Bukkit.getLogger().info("Setting output, "+!result.equals(first)+", to:"+result);
 		if(result.isSimilar(first))
@@ -95,15 +100,18 @@ public class EnchantmentCrafting implements Listener{
 					int level = cEnch.getLevelFromLore(second);
 					//Bukkit.getLogger().info("Enchantment of item 1:"+cEnch.getLevelFromLore(first)+", item 2:"+level);
 					if(level != 0 && level == cEnch.getLevelFromLore(first)) {
+						result = cEnch.disenchant(result);
 						result = cEnch.enchant(result, level+1, true);
 						//Bukkit.getLogger().info("Trying upgrade. Result: "+result);
 					}
-					else if(level > cEnch.getLevelFromLore(first))
+					else if(level > cEnch.getLevelFromLore(first)) {
+						result = cEnch.disenchant(result);
 						result = cEnch.enchant(result,level);
+					}
 				}
 			}
 			else if(result.getEnchantments().getOrDefault(ench, 0) < second.getEnchantments().get(ench))
-				result.addUnsafeEnchantment(ench, second.getEnchantments().get(ench));
+				result.addEnchantment(ench, second.getEnchantments().get(ench));
 		}
 		/*if(!result.equals(first) && result.getType() == Material.BOOK) {
 			result.setType(Material.ENCHANTED_BOOK);

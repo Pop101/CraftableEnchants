@@ -55,7 +55,6 @@ public abstract class CustomEnchantment extends Enchantment implements Listener 
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.instance);
 	}
-	
 	@EventHandler
 	public void minedBlockListener(BlockBreakEvent event) {
 		if(event.getPlayer() == null)
@@ -120,9 +119,9 @@ public abstract class CustomEnchantment extends Enchantment implements Listener 
 		for(ItemStack i : armor)
 			if(i != null)
 				if(getLevelFromLore(i) > 0)
-					onTakeDamage(event.getEntity(), i, event.getDamage());	
+					event.setDamage(onTakeDamage(event.getEntity(), i, event.getDamage()));	
 	}
-	public abstract void onTakeDamage(Entity target, ItemStack specificItem, double amount);
+	public abstract double onTakeDamage(Entity target, ItemStack specificItem, double amount);
 
 	@EventHandler
 	public void expListener(PlayerExpChangeEvent event) {

@@ -16,15 +16,16 @@ import org.bukkit.inventory.ItemStack;
 
 import com.SketchyPlugins.CraftableEnchants.Libraries.CustomEnchantment;
 import com.SketchyPlugins.CraftableEnchants.Libraries.ItemCategories;
+import com.SketchyPlugins.CraftableEnchants.Libraries.LocationUtils;
 
 public class Warping extends CustomEnchantment {
 
 	public Warping() {
 		super("Warping", 1);
-		//conflictsWith.add(Enchantment.PROTECTION_ENVIRONMENTAL);
-		//conflictsWith.add(Enchantment.PROTECTION_EXPLOSIONS);
-		//conflictsWith.add(Enchantment.PROTECTION_FIRE);
-		//conflictsWith.add(Enchantment.PROTECTION_PROJECTILE);
+		conflictsWith.add(Enchantment.PROTECTION_ENVIRONMENTAL);
+		conflictsWith.add(Enchantment.PROTECTION_EXPLOSIONS);
+		conflictsWith.add(Enchantment.PROTECTION_FIRE);
+		conflictsWith.add(Enchantment.PROTECTION_PROJECTILE);
 		//can enchant everything normal
 		for(Material m : ItemCategories.ARMOR)
 			canEnchant.add(m);
@@ -32,19 +33,8 @@ public class Warping extends CustomEnchantment {
 			canEnchant.add(m);
 	}
 	void randomWarp(Entity e) {
-		Location warp = e.getLocation().add(Math.random()*16-8, Math.random()*16-9, Math.random()*16-8);
-		boolean safe = false;
-		for(int i = 0; i < 16; i++) {
-			warp.add(0, 1, 0);
-			if(warp.getBlock().isPassable() || warp.getBlock().isEmpty()) {
-				Location up = warp.clone().add(0,1,0);
-				if(up.getBlock().isPassable() || up.getBlock().isEmpty()) {
-					safe = true;
-					break;
-				}
-			}
-		}
-		if(safe) {
+		Location warp = LocationUtils.randomSafeLoc(e.getLocation(), 16);
+		if(warp != null) {
 			e.getWorld().playSound(e.getLocation(), Sound.ITEM_CHORUS_FRUIT_TELEPORT, 1.0f, 1.0f);
 			
 			DustOptions d = new DustOptions(Color.PURPLE,1.5f);
@@ -75,10 +65,13 @@ public class Warping extends CustomEnchantment {
 	}
 
 	@Override
-	public void onTakeDamage(Entity target, ItemStack specificItem, double amount) {
-		//don't check armor only
+	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
+		//armor only
+		if(!ItemCategories.contains(specificItem.getType(), ItemCategories.ARMOR))
+			return amount;
 		if(Math.random() <= 0.0625) //with 4 pieces of warping armor, 25% chance to warp
 			randomWarp(target);
+		return amount;
 	}
 	
 	@Override

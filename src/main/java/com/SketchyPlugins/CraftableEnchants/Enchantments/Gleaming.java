@@ -186,9 +186,8 @@ public class Gleaming extends CustomEnchantment {
 	}
 
 	@Override
-	public void onTakeDamage(Entity target, ItemStack specificItem, double amount) {
-		// TODO Auto-generated method stub
-
+	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
+		return amount;
 	}
 
 	@Override

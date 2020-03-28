@@ -9,40 +9,40 @@ import org.bukkit.inventory.ItemStack;
 
 import com.SketchyPlugins.CraftableEnchants.Libraries.CustomEnchantment;
 
-public class Unknown extends CustomEnchantment {
+public class Hardness extends CustomEnchantment {
 
-	public Unknown() {
-		super("???", 1);
-		canCraftWith = false;
+	public Hardness() {
+		super("Hardness", 10);
 	}
 
 	@Override
 	public void onBlockMined(Player plr, ItemStack item, Block block) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onPlayerInteract(Player plr, ItemStack item, Block block, BlockFace face) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void onDealDamage(Entity source, ItemStack itemSource, Entity target, double damage) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
-		return amount;
+		double x = this.getLevelFromLore(specificItem);
+		return amount*-0.004*(x-16)*(x+12);
 	}
 
 	@Override
 	public int onGainExp(Player plr, ItemStack item, int amountLeft, int originalAmount) {
 		// TODO Auto-generated method stub
-		return amountLeft;
+		return originalAmount;
 	}
 
 	@Override
@@ -50,6 +50,5 @@ public class Unknown extends CustomEnchantment {
 		// TODO Auto-generated method stub
 		return projectile;
 	}
-
 
 }

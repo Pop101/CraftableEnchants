@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -28,7 +29,7 @@ public class Telekinesis extends CustomEnchantment {
 		for(Material m : ItemCategories.WEAPONS)
 			canEnchant.add(m);
 	}
-	void addToPlayer(Player plr, ItemStack... items) {
+	private void addToPlayer(Player plr, ItemStack... items) {
 		HashMap<Integer, ItemStack> toDrop =  plr.getInventory().addItem(items);
 		
 		for(Integer i : toDrop.keySet()) {
@@ -36,15 +37,24 @@ public class Telekinesis extends CustomEnchantment {
 		}
 		
 	}
+	private void pickupItems(final Player plr, final Location loc) {
+		Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, (Runnable)new Runnable() {
+			 public void run() {
+				 for(Entity near : loc.getWorld().getNearbyEntities(loc,1, 1, 1)) {
+						if(near instanceof Item) {
+							addToPlayer(plr, ((Item) near).getItemStack());
+							near.remove();
+						}
+				 }
+			 }
+		 },3);
+	}
 	@Override
 	public void onBlockMined(Player plr, ItemStack item, Block block) {
 		if(plr.getGameMode() == GameMode.CREATIVE)
 			return;
 		
-		ItemStack[] items = block.getDrops(item).toArray(new ItemStack[0]);
-		addToPlayer(plr, items);
-		
-		block.setType(Material.AIR);
+		pickupItems(plr, block.getLocation().add(0.5,0.5,0.5));
 	}
 
 	@Override
@@ -62,21 +72,11 @@ public class Telekinesis extends CustomEnchantment {
 		final Player plr = (Player) source;
 		final Damageable e = (Damageable) target;
 		if(e.getHealth() <= damage)
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Main.instance, (Runnable)new Runnable() {
-				 public void run() {
-					 for(Entity near : e.getNearbyEntities(1, 1, 1)) {
-							if(near instanceof Item) {
-								addToPlayer(plr, ((Item) near).getItemStack());
-								near.remove();
-							}
-					 }
-				 }
-			 },3);
+			pickupItems(plr, e.getLocation());
 	}
 	@Override
-	public void onTakeDamage(Entity target, ItemStack specificItem, double amount) {
-		// TODO Auto-generated method stub
-		
+	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
+		return amount;
 	}
 
 	@Override
@@ -90,7 +90,4 @@ public class Telekinesis extends CustomEnchantment {
 		// TODO Auto-generated method stub
 		return projectile;
 	}
-
-
-
 }

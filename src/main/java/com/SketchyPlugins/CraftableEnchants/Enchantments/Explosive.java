@@ -28,6 +28,7 @@ public class Explosive extends CustomEnchantment{
 			canEnchant.add(m);
 		conflictsWith.add(Enchantment.SILK_TOUCH);
 		conflictsWith.add(Enchantment.DIG_SPEED);
+		conflictsWith.add(Enchantment.DAMAGE_ALL);
 	}
 	void explode(Location center, float radius, ItemStack tool) {
 		center.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, center, 1);
@@ -89,9 +90,8 @@ public class Explosive extends CustomEnchantment{
 	}
 
 	@Override
-	public void onTakeDamage(Entity target, ItemStack specificItem, double amount) {
-		// TODO Auto-generated method stub
-		
+	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
+		return amount;
 	}
 
 	@Override

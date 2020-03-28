@@ -92,4 +92,16 @@ public class ItemCategories {
 			Material.WOODEN_SHOVEL,
 			Material.SHEARS,
 			Material.FISHING_ROD};
+	public static final Material[] GLEAMING = new Material[] {
+			Material.GOLD_BLOCK,
+			Material.GOLD_INGOT,
+			Material.GOLDEN_PICKAXE,
+			Material.GOLDEN_AXE,
+			Material.GOLDEN_SHOVEL,
+			Material.GOLDEN_SWORD,
+			Material.GOLDEN_HOE,
+			Material.GOLDEN_HELMET,
+			Material.GOLDEN_LEGGINGS,
+			Material.GOLDEN_CHESTPLATE,
+			Material.GOLDEN_BOOTS};
 }

@@ -36,8 +36,9 @@ public class Villainy extends CustomEnchantment {
 	}
 
 	@Override
-	public void onTakeDamage(Entity target, ItemStack specificItem, double amount) {
+	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
 		makeSound(target.getLocation());
+		return amount;
 	}
 
 	@Override

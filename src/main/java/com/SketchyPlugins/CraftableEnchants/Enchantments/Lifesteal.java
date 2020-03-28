@@ -58,9 +58,9 @@ public class Lifesteal extends CustomEnchantment {
 	}
 
 	@Override
-	public void onTakeDamage(Entity target, ItemStack specificItem, double amount) {
-		// TODO Auto-generated method stub
-		
+	@Override
+	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
+		return amount;
 	}
 
 	@Override
