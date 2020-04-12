@@ -58,7 +58,6 @@ public class Lifesteal extends CustomEnchantment {
 	}
 
 	@Override
-	@Override
 	public double onTakeDamage(Entity target, ItemStack specificItem, double amount) {
 		return amount;
 	}

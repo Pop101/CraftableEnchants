@@ -36,11 +36,13 @@ public class Blessing extends CustomEnchantment{
 	private void enchantFlash(ItemStack stack) {		
 		//get list of all possible enchantments
 		LinkedList<Enchantment> possibleEnchs = new LinkedList<Enchantment>();
-		for(Enchantment ench : Enchantment.values()) possibleEnchs.add(ench);
+		for(Enchantment ench : Enchantment.values()) if(ench.canEnchantItem(stack)) possibleEnchs.add(ench);
 		
 		//remove all enchantments the item has
 		for(Enchantment ench : stack.getEnchantments().keySet()) possibleEnchs.remove(ench);
 		
+		//if not possible, return
+		if(possibleEnchs.size() < 0) return;
 		//pick a random one
 		Enchantment toFlash = possibleEnchs.get((int) (Math.random()*possibleEnchs.size()));
 		
@@ -49,10 +51,10 @@ public class Blessing extends CustomEnchantment{
 		
 		//add it
 		if(toFlash instanceof CustomEnchantment) {
-			((CustomEnchantment) toFlash).enchant(stack, level);
+			CustomEnchantment.forceEnchantItem(stack, (CustomEnchantment) toFlash, level);
 		}
 		else {
-			stack.addEnchantment(toFlash, level);
+			stack.addUnsafeEnchantment(toFlash, level);
 		}
 		
 		//queue removal

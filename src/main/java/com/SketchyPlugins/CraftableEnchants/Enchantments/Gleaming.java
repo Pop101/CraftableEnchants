@@ -149,7 +149,7 @@ public class Gleaming extends CustomEnchantment {
 				for(Enchantment ench : i.getEnchantments().keySet()) {
 					if((ench instanceof CustomEnchantment) && !(ench instanceof Gleaming)) {
 						CustomEnchantment cEnch = (CustomEnchantment) ench;
-						if(cEnch.canCraftWith) {
+						if(cEnch.canCraftWith && !cEnch.equals(CustomEnchantment.valueOf("Infusion"))) {
 							int level = cEnch.getLevelFromLore(i);
 							if(level > cEnch.getLevelFromLore(og))
 								cEnch.enchant(og,level,true);

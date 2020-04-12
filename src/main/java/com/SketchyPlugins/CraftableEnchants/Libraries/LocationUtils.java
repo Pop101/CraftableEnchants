@@ -1,6 +1,7 @@
 package com.SketchyPlugins.CraftableEnchants.Libraries;
 
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 
@@ -18,27 +19,35 @@ public class LocationUtils {
 		
 		return loc;
 	}
+	public static boolean isSafe(Location loc) {
+		return loc.getBlock().getType() == Material.AIR && loc.clone().add(0,1,0).getBlock().getType() == Material.AIR;
+	}
 	public static boolean makeSafeWithLimits(Location loc) {
-		//first, move it to the ground like normal
-		while(!loc.getBlock().getType().isSolid() && loc.getZ() > 0)
-			loc.add(0,-1,0);
-		
-		if(loc.getZ() <= 0) return false;
-		
-		//now, try and move it up with a max of 5 blocks
-		int moved = 0;
-		while(loc.getBlock().getType().isSolid() && loc.clone().add(0,1,0).getBlock().getType().isSolid() && moved < limit/5) {
-			loc.add(0,1,0);
-			moved++;
+		try{
+			//first, move it to the ground like normal
+	
+			while(!loc.getBlock().getType().isSolid() && loc.getZ() > 0)
+				loc.add(0,-1,0);
+			
+			if(loc.getZ() <= 0) return false;
+			if(!loc.getChunk().isLoaded()) return false;
+			
+			//now, try and move it up with a max of 5 blocks
+			int moved = 0;
+			while(!isSafe(loc) && moved < limit/5) {
+				loc.add(0,1,0);
+				moved++;
+			}
+			//if it failed, move it back down
+			if(moved == limit/5) {
+				loc.subtract(0, moved, 0);
+				return false;
+			}
+			
+			//if the location ended up being safe, return true
+			return !loc.getBlock().getType().isSolid();
 		}
-		//if it failed, move it back down
-		if(moved == limit/5) {
-			loc.subtract(0, moved, 0);
-			return false;
-		}
-		
-		//if the location ended up being safe, return true
-		return !loc.getBlock().getType().isSolid();
+		catch(Exception e) {return false;}
 	}
 	
 	public static Location randomSafeLoc(Location original, float radius) {
@@ -54,7 +63,7 @@ public class LocationUtils {
 			attempts++;
 			toReturn = original.clone().add(x,0,z);
 		}
-		while(!makeSafeWithLimits(toReturn) || attempts > limit); //repeat if unsafe, stop if limit reached
+		while(!makeSafeWithLimits(toReturn) && attempts < limit); //repeat if unsafe, stop if limit reached
 		
 		//return the location ends up safe
 		return toReturn;

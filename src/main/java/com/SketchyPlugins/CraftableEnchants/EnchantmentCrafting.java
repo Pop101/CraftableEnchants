@@ -110,8 +110,15 @@ public class EnchantmentCrafting implements Listener{
 					}
 				}
 			}
-			else if(result.getEnchantments().getOrDefault(ench, 0) < second.getEnchantments().get(ench))
-				result.addEnchantment(ench, second.getEnchantments().get(ench));
+			else if(result.getEnchantments().getOrDefault(ench, 0) < second.getEnchantments().get(ench)) {
+				boolean canAdd = ench.canEnchantItem(result);
+				for(Enchantment conflict : Enchantment.values())
+					if(ench.conflictsWith(conflict) && first.containsEnchantment(conflict)) canAdd = false;
+				
+				if(canAdd)
+					result.addEnchantment(ench, second.getEnchantments().get(ench));
+			}
+				
 		}
 		/*if(!result.equals(first) && result.getType() == Material.BOOK) {
 			result.setType(Material.ENCHANTED_BOOK);

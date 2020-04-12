@@ -31,6 +31,8 @@ public class Infusion extends CustomEnchantment{
 			canEnchant.add(m);
 		for(Material m : ItemCategories.GLEAMING)
 			canEnchant.remove(m);
+		
+		super.conflictsWith.add(CustomEnchantment.valueOf("Gleaming"));
 	}
 
 	@Override

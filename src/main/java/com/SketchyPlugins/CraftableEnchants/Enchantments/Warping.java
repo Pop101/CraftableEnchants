@@ -69,8 +69,10 @@ public class Warping extends CustomEnchantment {
 		//armor only
 		if(!ItemCategories.contains(specificItem.getType(), ItemCategories.ARMOR))
 			return amount;
-		if(Math.random() <= 0.0625) //with 4 pieces of warping armor, 25% chance to warp
+		if(Math.random() <= 0.0625) { //with 4 pieces of warping armor, 25% chance to warp
 			randomWarp(target);
+			return 0;
+		}
 		return amount;
 	}
 	

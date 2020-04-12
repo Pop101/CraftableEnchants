@@ -120,6 +120,7 @@ public abstract class CustomEnchantment extends Enchantment implements Listener 
 			if(i != null)
 				if(getLevelFromLore(i) > 0)
 					event.setDamage(onTakeDamage(event.getEntity(), i, event.getDamage()));	
+		if(event.getDamage() == 0) event.setCancelled(true);
 	}
 	public abstract double onTakeDamage(Entity target, ItemStack specificItem, double amount);
 
@@ -414,5 +415,14 @@ public abstract class CustomEnchantment extends Enchantment implements Listener 
 		i.addUnsafeEnchantment(enchantment, level);
 		
 		return i;
+	}
+	private static HashMap<String, CustomEnchantment> registeredEnchants;
+	public static void RegisterEnchantement(CustomEnchantment cEnch) {
+		if(registeredEnchants == null) registeredEnchants = new HashMap<String, CustomEnchantment>();
+		if(registeredEnchants.containsKey(cEnch.name)) throw new IllegalArgumentException("Enchantment already registered!");
+		registeredEnchants.put(cEnch.name, cEnch);
+	}
+	public static CustomEnchantment valueOf(String str) {
+		return registeredEnchants.get(str);
 	}
 }

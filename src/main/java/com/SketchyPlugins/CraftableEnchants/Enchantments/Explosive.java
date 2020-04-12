@@ -19,7 +19,7 @@ import com.SketchyPlugins.CraftableEnchants.Libraries.ItemCategories;
 public class Explosive extends CustomEnchantment{
 
 	public Explosive() {
-		super("Explosive", 2);
+		super("Explosive", 3);
 		for(Material m : ItemCategories.TOOLS)
 			canEnchant.add(m);
 		for(Material m : ItemCategories.HOES)
@@ -30,7 +30,7 @@ public class Explosive extends CustomEnchantment{
 		conflictsWith.add(Enchantment.DIG_SPEED);
 		conflictsWith.add(Enchantment.DAMAGE_ALL);
 	}
-	void explode(Location center, float radius, ItemStack tool) {
+	void explode(Location center, float radius, boolean destroyBlocks, ItemStack tool) {
 		center.getWorld().spawnParticle(Particle.EXPLOSION_NORMAL, center, 1);
 		center.getWorld().playSound(center, Sound.ENTITY_GENERIC_EXPLODE, 0.2f, 1.0f);
 		for(float x = -radius; x <= radius; x++)
@@ -51,7 +51,8 @@ public class Explosive extends CustomEnchantment{
 	public void onBlockMined(Player plr, ItemStack item, Block block) {
 		if(!ItemCategories.contains(item.getType(), ItemCategories.TOOLS))
 			return;
-		explode(block.getLocation().add(0.5,0.5,0.5),getLevelFromLore(item),item);
+		if(plr.isSneaking()) return;
+		explode(block.getLocation().add(0.5,0.5,0.5),2*getLevelFromLore(item),true, item);
 		if(plr.getGameMode() != GameMode.CREATIVE && plr.getGameMode() != GameMode.ADVENTURE)
 			if(item.getData() instanceof org.bukkit.inventory.meta.Damageable) {
 				org.bukkit.inventory.meta.Damageable d = (org.bukkit.inventory.meta.Damageable) item.getData();
@@ -71,9 +72,11 @@ public class Explosive extends CustomEnchantment{
 			return;
 		if(!(target instanceof org.bukkit.entity.Damageable))
 			return;
-		final org.bukkit.entity.Damageable e = (org.bukkit.entity.Damageable) target;
-		if(e.getHealth() <= damage)
-			explode(target.getLocation().add(0,target.getHeight(),0),getLevelFromLore(itemSource),itemSource);
+		if(source instanceof Player && ((Player) source).isSneaking()) return;
+		
+		//final org.bukkit.entity.Damageable e = (org.bukkit.entity.Damageable) target;
+		//if the damage is greater than e's health
+		explode(target.getLocation().add(0,target.getHeight(),0),2*getLevelFromLore(itemSource), false, itemSource);
 		if(source instanceof Player) {
 			Player plr = (Player) source;
 			if(plr.getGameMode() != GameMode.CREATIVE && plr.getGameMode() != GameMode.ADVENTURE)
