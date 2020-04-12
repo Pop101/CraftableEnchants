@@ -56,7 +56,7 @@ public class Explosive extends CustomEnchantment{
 		if(plr.getGameMode() != GameMode.CREATIVE && plr.getGameMode() != GameMode.ADVENTURE)
 			if(item.getData() instanceof org.bukkit.inventory.meta.Damageable) {
 				org.bukkit.inventory.meta.Damageable d = (org.bukkit.inventory.meta.Damageable) item.getData();
-				d.setDamage(d.getDamage()+(int)(Math.random()*6+2));
+				d.setDamage(d.getDamage()-(int)(Math.random()*(5-item.getEnchantmentLevel(Enchantment.DURABILITY))));
 			}
 	}
 

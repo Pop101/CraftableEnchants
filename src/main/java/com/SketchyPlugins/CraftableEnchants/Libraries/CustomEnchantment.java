@@ -54,6 +54,7 @@ public abstract class CustomEnchantment extends Enchantment implements Listener 
 		canEnchant = new ArrayList<Material>();
 		
 		Bukkit.getServer().getPluginManager().registerEvents(this, Main.instance);
+		CustomEnchantment.RegisterEnchantement(this);
 	}
 	@EventHandler
 	public void minedBlockListener(BlockBreakEvent event) {
